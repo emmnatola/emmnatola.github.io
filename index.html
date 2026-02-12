@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -121,13 +121,13 @@
 
         /* Head */
         .head {
-            position: absolute;
+            position: relative;
             width: 200px;
             height: 240px;
             background-color: #fddac0;
-            border-radius: 100px;
+            border-radius: 80px 80px 100px 100px;
             left: 50px;
-            top: 50px;
+            top: 45px;
             z-index: 2;
             overflow: hidden;
         }
@@ -135,16 +135,16 @@
         /* Eyes */
         .eye {
             position: absolute;
-            width: 20px;
+            width: 25px;
             height: 20px;
             background-color: #333;
             border-radius: 50%;
-            top: 110px;
+            top: 115px;
             z-index: 3;
             animation: blink 4s infinite;
         }
-        .eye.left { left: 55px; }
-        .eye.right { right: 55px; }
+        .eye.left { left: 53px; }
+        .eye.right { right: 53px; }
 
         /* Blush */
         .blush {
@@ -153,22 +153,22 @@
             height: 15px;
             background-color: #ffb7b2;
             border-radius: 50%;
-            top: 140px;
-            opacity: 0.6;
+            top: 145px;
+            opacity: 0.9;
             z-index: 3;
         }
-        .blush.left { left: 40px; }
-        .blush.right { right: 40px; }
+        .blush.left { left: 42px; }
+        .blush.right { right: 42px; }
 
         /* Mouth */
         .mouth {
             position: absolute;
-            width: 30px;
+            width: 35px;
             height: 15px;
             border-bottom: 3px solid #cc8e69;
             border-radius: 50%;
-            left: 85px;
-            top: 150px;
+            left: 82px;
+            top: 155px;
             z-index: 3;
         }
 
@@ -177,13 +177,13 @@
             position: absolute;
             width: 100%;
             height: 50px;
-            top: 95px;
+            top: 100px;
             z-index: 5;
         }
         .lens {
             position: absolute;
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 40px;
             border: 4px solid #333;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
@@ -192,11 +192,11 @@
         .lens.right { right: 35px; }
         .bridge {
             position: absolute;
-            width: 20px;
+            width: 22px;
             height: 4px;
             background-color: #333;
-            left: 90px;
-            top: 25px;
+            left: 89px;
+            top: 20px;
         }
 
         /* Bangs */
@@ -447,7 +447,7 @@
 
         noClickCount++;
 
-        // Usar dimensiones fijas estimadas del botón
+        // 
         const btnWidth = 150;
         const btnHeight = 60;
         const margin = 30;
@@ -458,7 +458,7 @@
         const maxY = window.innerHeight - btnHeight - margin;
 
         const randomX = minX + Math.floor(Math.random() * (maxX - minX));
-        const randomY = minY + Math.floor(Math.random() * Math.min((maxY - minY), window.innerHeight * 0.6));
+        const randomY = minY + Math.floor(Math.random() * Math.min((maxY - minY), window.innerHeight * 0.3));
 
         const finalX = Math.max(minX, Math.min(randomX, maxX));
         const finalY = Math.max(minY, Math.min(randomY, maxY));
