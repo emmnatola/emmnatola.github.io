@@ -24,6 +24,7 @@
             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%);
             overflow: hidden;
             position: relative;
+            cursor: none;
         }
 
         /* Animated background effects */
@@ -42,6 +43,38 @@
             0%, 100% { transform: translate(0, 0) rotate(0deg); }
             33% { transform: translate(-5%, 5%) rotate(2deg); }
             66% { transform: translate(5%, -5%) rotate(-2deg); }
+        }
+
+        /* Cursor trail emoji */
+        .cursor-trail {
+            position: fixed;
+            pointer-events: none;
+            font-size: 20px;
+            animation: trailFade 1s ease-out forwards;
+            z-index: 9999;
+        }
+
+        @keyframes trailFade {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5) translateY(-30px);
+            }
+        }
+
+        /* Custom cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff4757;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
         }
 
         /* Floating hearts at the bottom */
@@ -385,6 +418,8 @@
 </head>
 
 <body>
+    <div class="custom-cursor"></div>
+    
     <div class="heart-bg" style="left: 10%; animation-delay: 0s;">💕</div>
     <div class="heart-bg" style="left: 30%; animation-delay: 2s;">💖</div>
     <div class="heart-bg" style="left: 50%; animation-delay: 4s;">💗</div>
@@ -440,6 +475,51 @@
 
     <script>
     let noClickCount = 0;
+    let messageIndex = 0;
+    
+    const noMessages = [
+        "You hate meeeee",
+        "Bubby ano ba...",
+        "Bahala ka!",
+        "I'll make you shakshuka...",
+        "TIME CAST A SPELL ON YEW",
+        "YOU'RE TEARING ME APART LISA",
+        "Is it my giant square feet...?",
+        "I am just a smol boy...",
+        "FINE THEN THROW ME AWAY",
+        "HOW DID WE GET HERE",
+        "I USED TO KNOW YOU SO WELLLL OHHHHH",
+        "PLEASE BABA I'M DESPERATE"
+    ];
+
+    // Cursor trail effect
+    const trailEmojis = ['💕', '💖', '💗', '💝', '💘', '❤️'];
+    let lastTrailTime = 0;
+    const trailDelay = 50; // milliseconds between trail emojis
+
+    document.addEventListener('mousemove', (e) => {
+        const cursor = document.querySelector('.custom-cursor');
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+
+        // Create trail effect
+        const currentTime = Date.now();
+        if (currentTime - lastTrailTime > trailDelay) {
+            createTrail(e.clientX, e.clientY);
+            lastTrailTime = currentTime;
+        }
+    });
+
+    function createTrail(x, y) {
+        const trail = document.createElement('div');
+        trail.className = 'cursor-trail';
+        trail.textContent = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
+        trail.style.left = x + 'px';
+        trail.style.top = y + 'px';
+        document.body.appendChild(trail);
+
+        setTimeout(() => trail.remove(), 1000);
+    }
 
     function moveButton() {
         const btn = document.getElementById('noBtn');
@@ -447,18 +527,35 @@
 
         noClickCount++;
 
-        // 
+        // Cycle through messages
+        messageIndex = (messageIndex + 1) % noMessages.length;
+        btn.querySelector('span').textContent = noMessages[messageIndex];
+
+        // Reduced movement range - only moves within a smaller area
         const btnWidth = 150;
         const btnHeight = 60;
-        const margin = 30;
+        const margin = 50;
 
+        // Calculate container bounds
+        const containerRect = document.querySelector('.container').getBoundingClientRect();
+        
+        // Move within a smaller radius around the container
+        const moveRadius = 200; // pixels from container
+        const centerX = containerRect.left + containerRect.width / 2;
+        const centerY = containerRect.top + containerRect.height / 2;
+
+        // Random angle and distance
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * moveRadius;
+        
+        const randomX = centerX + Math.cos(angle) * distance - btnWidth / 2;
+        const randomY = centerY + Math.sin(angle) * distance - btnHeight / 2;
+
+        // Ensure button stays on screen
         const minX = margin;
         const maxX = window.innerWidth - btnWidth - margin;
         const minY = margin;
         const maxY = window.innerHeight - btnHeight - margin;
-
-        const randomX = minX + Math.floor(Math.random() * (maxX - minX));
-        const randomY = minY + Math.floor(Math.random() * Math.min((maxY - minY), window.innerHeight * 0.3));
 
         const finalX = Math.max(minX, Math.min(randomX, maxX));
         const finalY = Math.max(minY, Math.min(randomY, maxY));
@@ -468,6 +565,7 @@
         btn.style.top = finalY + 'px';
         btn.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
 
+        // Grow yes button
         const newScale = 1 + (noClickCount * 0.15);
         yesBtn.style.transform = `scale(${newScale})`;
         yesBtn.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
